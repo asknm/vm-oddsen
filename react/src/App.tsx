@@ -1,5 +1,6 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useState } from "react";
+import Home from "./LoggedIn/Home";
 import Login from "./Login";
 
 export default function App() {
@@ -16,11 +17,7 @@ export default function App() {
   });
 
   if (isLoggedIn) {
-    return (
-      <div>
-        Heiu
-      </div>
-    );
+    return <Home />
   }
   else {
     return <Login />
