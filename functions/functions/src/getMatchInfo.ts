@@ -3,6 +3,7 @@ import { IApiMatch } from "../../../common/football-data/match";
 import { Firestore, Timestamp } from "firebase-admin/firestore";
 import axios from 'axios';
 import { fromApiTeam } from "../../../common/base/team";
+import { logger } from "firebase-functions/v1";
 
 
 export async function getMatchesHandler(db: Firestore, apiKey: string) {
@@ -11,6 +12,7 @@ export async function getMatchesHandler(db: Firestore, apiKey: string) {
     const matches = await getMatchesFromDb();
 
     if (!matches.length) {
+        logger.log('Fetching matches from api');
         const matchesFromApi = await getMatchesFromApi();
         const batch = db.batch();
         for (const match of matchesFromApi) {
