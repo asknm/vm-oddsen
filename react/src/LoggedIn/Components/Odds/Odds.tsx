@@ -13,12 +13,16 @@ type OddsProps = {
 
 export default function Odds(props: OddsProps) {
     const [odds, setOdds] = useState<OddsWithRef | undefined>();
+    const [loaded, setLoaded] = useState(false);
 
-    onSnapshot(doc(getFirestore(), "matches", props.match.id, "odds", "odds") as DocumentReference<OddsWithRef>, doc => {
-        if (doc.exists()) {
-            setOdds(doc.data());
-        }
-    })
+    if(!loaded) {
+        setLoaded(true);
+        onSnapshot(doc(getFirestore(), "matches", props.match.id, "odds", "odds") as DocumentReference<OddsWithRef>, doc => {
+            if (doc.exists()) {
+                setOdds(doc.data());
+            }
+        });
+    }
 
     if (odds) {
         if (props.uid === odds.bookmaker.id) {

@@ -7,6 +7,6 @@ export async function newUserHandler(userRecord: UserRecord, db: Firestore) {
 	const user: InsertUser = {
 		name: userRecord.displayName ?? "No name",
 		timestamp: FieldValue.serverTimestamp(),
-	}
+	};
 	await docRef.set(user);
 }

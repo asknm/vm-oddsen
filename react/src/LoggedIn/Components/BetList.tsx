@@ -9,17 +9,21 @@ type BetListProps = {
 
 export default function BetList(props: BetListProps) {
     const [bets, setBets] = useState<BetWithBetter[]>([])
+    const [loaded, setLoaded] = useState(false);
 
-    onSnapshot(collection(getFirestore(), "matches", props.mid, "bets") as CollectionReference<BaseBet>, async snapshot => {
-        const betsWithBetterName = await Promise.all<BetWithBetter>(snapshot.docs.map(async doc => await ToBetWithBetter(doc)));
-        setBets(betsWithBetterName);
-    })
+    if(!loaded) {
+        setLoaded(true);
+        onSnapshot(collection(getFirestore(), "matches", props.mid, "bets") as CollectionReference<BaseBet>, async snapshot => {
+            const betsWithBetterName = await Promise.all<BetWithBetter>(snapshot.docs.map(async doc => await ToBetWithBetter(doc)));
+            setBets(betsWithBetterName);
+        });
+    }
 
     const selectionSymbols = ["H", "U", "B"];
 
     return <div>
         {bets.map((value, index) => {
-            return <Typography variant="body1" key={index}> {value.amount}kr på {selectionSymbols[value.selection]} : {value.better} : {value.timestamp.toDate().toLocaleString()} </Typography>
+            return <Typography variant="body1" key={index}> {value.amount}kr på {selectionSymbols[value.selection]} : {value.better} : {value.timestamp && value.timestamp.toDate().toLocaleString()} </Typography>
         })}
     </div>
 

@@ -13,14 +13,18 @@ type OddsAsBetterProps = {
 
 export default function OddsAsBetter(props: OddsAsBetterProps) {
     const [bet, setBet] = useState<BaseBet | null | undefined>(undefined);
+    const [loaded, setLoaded] = useState(false);
 
-    onSnapshot(doc(getFirestore(), "matches", props.mid, "bets", props.uid) as DocumentReference<BaseBet>, doc => {
-        if (!doc.exists()) {
-            setBet(null);
-            return;
-        }
-        setBet(doc.data());
-    });
+    if(!loaded) {
+        setLoaded(true);
+        onSnapshot(doc(getFirestore(), "matches", props.mid, "bets", props.uid) as DocumentReference<BaseBet>, doc => {
+            if (!doc.exists()) {
+                setBet(null);
+                return;
+            }
+            setBet(doc.data());
+        });
+    }
 
     if (bet) {
         return <OddsViewer odds={props.odds} />
