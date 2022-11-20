@@ -1,3 +1,4 @@
+import React from 'react';
 import { Odds, ToOddsArray } from "common"
 import OddsSetter from "./OddsSetter"
 import OddsViewer from "./OddsViewer"

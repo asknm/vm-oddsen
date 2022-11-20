@@ -1,3 +1,4 @@
+import React from 'react';
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 import RGL, { WidthProvider } from "react-grid-layout";
@@ -56,13 +57,13 @@ export default function OddsBetter(props: OddsBetterProps) {
             <Typography variant="body1" key="o2"> {props.odds[2]} </Typography>
 
             <div key="s0">
-                <input type="checkbox" checked={selected === OddsOptions.H} onChange={_ => setSelected(OddsOptions.H)} />
+                <input type="checkbox" checked={selected === OddsOptions.H} onChange={() => setSelected(OddsOptions.H)} />
             </div>
             <div key="s1">
-                <input type="checkbox" checked={selected === OddsOptions.U} onChange={_ => setSelected(OddsOptions.U)} />
+                <input type="checkbox" checked={selected === OddsOptions.U} onChange={() => setSelected(OddsOptions.U)} />
             </div>
             <div key="s2">
-                <input type="checkbox" checked={selected === OddsOptions.B} onChange={_ => setSelected(OddsOptions.B)} />
+                <input type="checkbox" checked={selected === OddsOptions.B} onChange={() => setSelected(OddsOptions.B)} />
             </div>
 
             <div key="amount">

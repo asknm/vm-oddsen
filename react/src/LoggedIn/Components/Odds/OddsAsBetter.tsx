@@ -1,6 +1,7 @@
+import React from 'react';
 import { doc, DocumentReference, getFirestore, onSnapshot } from "@firebase/firestore"
 import { OddsArray } from "common"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { BaseBet } from "../../../types/Bet"
 import OddsBetter from "./OddsBetter"
 import OddsViewer from "./OddsViewer"
@@ -13,10 +14,8 @@ type OddsAsBetterProps = {
 
 export default function OddsAsBetter(props: OddsAsBetterProps) {
     const [bet, setBet] = useState<BaseBet | null | undefined>(undefined);
-    const [loaded, setLoaded] = useState(false);
-
-    if(!loaded) {
-        setLoaded(true);
+    
+    useEffect(() => {
         onSnapshot(doc(getFirestore(), "matches", props.mid, "bets", props.uid) as DocumentReference<BaseBet>, doc => {
             if (!doc.exists()) {
                 setBet(null);
@@ -24,7 +23,7 @@ export default function OddsAsBetter(props: OddsAsBetterProps) {
             }
             setBet(doc.data());
         });
-    }
+    }, []);
 
     if (bet) {
         return <OddsViewer odds={props.odds} />

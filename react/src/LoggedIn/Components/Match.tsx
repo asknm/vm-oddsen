@@ -1,3 +1,4 @@
+import React from 'react';
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
 import Typography from "@mui/material/Typography/Typography";
 import createTheme from "@mui/material/styles/createTheme";
@@ -31,7 +32,7 @@ export default function Match(props: MatchProps) {
 
     const theme = responsiveFontSizes(createTheme())
 
-    let navigate = useNavigate();
+    const navigate = useNavigate();
     function navigateToMatchPage() {
         navigate(`/m/${props.match.id}`, {
             state: {

@@ -1,3 +1,4 @@
+import React from 'react';
 import createTheme from "@mui/material/styles/createTheme";
 import responsiveFontSizes from "@mui/material/styles/responsiveFontSizes";
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
@@ -19,10 +20,8 @@ export default function Dashboard() {
             setMatchDict(res.data);
         }
 
-        if (!Object.keys(matchDict).length) {
-            getMatches()
-        }
-    })
+        getMatches()
+    }, []);
 
     let theme = createTheme();
     theme = responsiveFontSizes(theme);

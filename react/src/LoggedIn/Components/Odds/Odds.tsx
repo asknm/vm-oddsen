@@ -1,10 +1,10 @@
+import React from 'react';
 import { doc, DocumentReference, getFirestore, onSnapshot } from "@firebase/firestore"
-import { DtoMatch, ToOddsArray } from "common"
-import { useState } from "react"
+import { DtoMatch, ToOddsArray, HasStarted } from "common"
+import { useEffect, useState } from "react"
 import OddsAsBookmaker from "./OddsAsBookmaker"
 import OddsAsBetter from "./OddsAsBetter"
 import { OddsWithRef } from "../../../types/Odds"
-import { HasStarted } from "common/dist/dto/match"
 
 type OddsProps = {
     match: DtoMatch,
@@ -13,16 +13,14 @@ type OddsProps = {
 
 export default function Odds(props: OddsProps) {
     const [odds, setOdds] = useState<OddsWithRef | undefined>();
-    const [loaded, setLoaded] = useState(false);
 
-    if(!loaded) {
-        setLoaded(true);
+    useEffect(() => {
         onSnapshot(doc(getFirestore(), "matches", props.match.id, "odds", "odds") as DocumentReference<OddsWithRef>, doc => {
             if (doc.exists()) {
                 setOdds(doc.data());
             }
         });
-    }
+    }, []);
 
     if (odds) {
         if (props.uid === odds.bookmaker.id) {

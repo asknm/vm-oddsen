@@ -1,4 +1,5 @@
-import { useState } from "react"
+import React from 'react';
+import { useEffect, useState } from "react"
 import { collection, CollectionReference, getFirestore, onSnapshot } from "@firebase/firestore"
 import { BaseBet, BetWithBetter, ToBetWithBetter } from "../../types/Bet"
 import { Typography } from "@mui/material"
@@ -9,15 +10,13 @@ type BetListProps = {
 
 export default function BetList(props: BetListProps) {
     const [bets, setBets] = useState<BetWithBetter[]>([])
-    const [loaded, setLoaded] = useState(false);
 
-    if(!loaded) {
-        setLoaded(true);
+    useEffect(() => {
         onSnapshot(collection(getFirestore(), "matches", props.mid, "bets") as CollectionReference<BaseBet>, async snapshot => {
             const betsWithBetterName = await Promise.all<BetWithBetter>(snapshot.docs.map(async doc => await ToBetWithBetter(doc)));
             setBets(betsWithBetterName);
         });
-    }
+    }, []);
 
     const selectionSymbols = ["H", "U", "B"];
 

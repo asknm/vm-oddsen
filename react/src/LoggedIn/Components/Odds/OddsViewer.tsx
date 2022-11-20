@@ -1,3 +1,4 @@
+import React from 'react';
 import { createTheme, responsiveFontSizes, ThemeProvider, Typography } from '@mui/material';
 import { OddsOptions } from 'common';
 

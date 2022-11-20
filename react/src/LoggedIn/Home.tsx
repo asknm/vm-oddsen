@@ -1,3 +1,4 @@
+import React from 'react';
 import { getAuth } from '@firebase/auth';
 import AppBar from '@mui/material/AppBar/AppBar';
 import Button from '@mui/material/Button/Button';

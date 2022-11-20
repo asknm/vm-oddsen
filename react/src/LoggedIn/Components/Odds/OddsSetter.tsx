@@ -1,3 +1,4 @@
+import React from 'react';
 import { doc, DocumentReference, getFirestore, updateDoc } from "@firebase/firestore";
 import { useState } from "react";
 import NumericInput from "react-numeric-input";
