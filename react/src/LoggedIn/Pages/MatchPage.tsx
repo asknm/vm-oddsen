@@ -2,7 +2,7 @@ import { doc, DocumentReference, getDoc, getFirestore } from "@firebase/firestor
 import { useState } from "react";
 import { useLocation, useParams } from "react-router-dom"
 import { DtoMatch } from "common";
-import { FirebaseMatch, ToDtoMatch } from "../../types/FirebaseMatch";
+import { FirebaseMatch, ToDtoMatch } from "../../types/Match";
 import Match from "../Components/Match"
 import Odds from "../Components/Odds/Odds";
 import { getAuth } from "@firebase/auth";

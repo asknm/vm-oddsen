@@ -4,6 +4,7 @@ import { useState } from "react"
 import OddsAsBookmaker from "./OddsAsBookmaker"
 import OddsAsBetter from "./OddsAsBetter"
 import { OddsWithRef } from "../../../types/Odds"
+import { HasStarted } from "common/dist/dto/match"
 
 type OddsProps = {
     match: DtoMatch,
@@ -23,7 +24,7 @@ export default function Odds(props: OddsProps) {
         if (props.uid === odds.bookmaker.id) {
             return <OddsAsBookmaker odds={odds} mid={props.match.id} />
         }
-        else if (odds.H) {
+        else if (odds.H && !HasStarted(props.match)) {
             return <OddsAsBetter odds={ToOddsArray(odds)} mid={props.match.id} uid={props.uid} />
         }
     }

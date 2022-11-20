@@ -1,5 +1,5 @@
 export { type DtoMatchDictionary } from "./firebase/matchDictionary"
-export { type DtoMatch } from "./dto/match"
+export { type DtoMatch, HasStarted } from "./dto/match"
 export { type BaseMatch } from "./base/match"
 export { type ApiMatch } from "./football-data/match"
 
