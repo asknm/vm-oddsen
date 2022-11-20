@@ -10,7 +10,6 @@ export async function ToBetWithBetter(snapshot: QueryDocumentSnapshot<BaseBet>):
     const userDoc = await getDoc(doc(getFirestore(), "users", snapshot.id) as DocumentReference<User>);
     const user = userDoc.data();
     const baseBet = snapshot.data();
-    console.log(baseBet);
     return {
         better: user?.name ?? snapshot.id, 
         selection: baseBet.selection,
