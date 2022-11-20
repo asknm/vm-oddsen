@@ -1,13 +1,13 @@
 import { doc, DocumentReference, getFirestore, onSnapshot } from "@firebase/firestore"
 import { DtoMatch, ToOddsArray } from "common"
 import { useState } from "react"
-import { getAuth } from "@firebase/auth"
 import OddsAsBookmaker from "./OddsAsBookmaker"
 import OddsAsBetter from "./OddsAsBetter"
 import { OddsWithRef } from "../../../types/Odds"
 
 type OddsProps = {
-    match: DtoMatch
+    match: DtoMatch,
+    uid: string,
 }
 
 export default function Odds(props: OddsProps) {
@@ -19,14 +19,12 @@ export default function Odds(props: OddsProps) {
         }
     })
 
-    const uid = getAuth().currentUser?.uid;
-
-    if (odds && uid) {
-        if (uid === odds.bookmaker.id) {
+    if (odds) {
+        if (props.uid === odds.bookmaker.id) {
             return <OddsAsBookmaker odds={odds} mid={props.match.id} />
         }
         else if (odds.H) {
-            return <OddsAsBetter odds={ToOddsArray(odds)} mid={props.match.id} uid={uid} />
+            return <OddsAsBetter odds={ToOddsArray(odds)} mid={props.match.id} uid={props.uid} />
         }
     }
 

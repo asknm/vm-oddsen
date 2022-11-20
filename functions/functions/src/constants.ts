@@ -5,4 +5,4 @@ export type FirebaseMatch = BaseMatch<Timestamp>;
 
 export const myRegion = "europe-central2";
 
-export type User = IUser<FieldValue>;
+export type InsertUser = IUser<FieldValue>;

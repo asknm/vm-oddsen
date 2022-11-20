@@ -5,6 +5,8 @@ import { DtoMatch } from "common";
 import { FirebaseMatch, ToDtoMatch } from "../../types/FirebaseMatch";
 import Match from "../Components/Match"
 import Odds from "../Components/Odds/Odds";
+import { getAuth } from "@firebase/auth";
+import BetList from "../Components/BetList";
 
 
 export default function MatchPage() {
@@ -28,11 +30,14 @@ export default function MatchPage() {
         }
     }
 
+    const uid = getAuth().currentUser?.uid;
+
     return <div>
-        {match &&
+        {match && uid &&
             <div>
                 <Match match={match} />
-                <Odds match={match} />
+                <Odds match={match} uid={uid} />
+                <BetList mid={match.id} />
             </div>
         }
     </div>

@@ -1,4 +1,4 @@
-export type IUser<FieldValueType> = {
+export type IUser<TTimestamp> = {
     name: string,
-    timestamp: FieldValueType,
+    timestamp: TTimestamp,
 };

@@ -1,6 +1,7 @@
 import { doc, DocumentReference, getFirestore, onSnapshot } from "@firebase/firestore"
-import { BaseBet, OddsArray } from "common"
+import { OddsArray } from "common"
 import { useState } from "react"
+import { BaseBet } from "../../../types/Bet"
 import OddsBetter from "./OddsBetter"
 import OddsBetterView from "./OddsBetterView"
 
