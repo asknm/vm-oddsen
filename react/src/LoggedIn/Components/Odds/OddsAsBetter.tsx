@@ -3,7 +3,7 @@ import { OddsArray } from "common"
 import { useState } from "react"
 import { BaseBet } from "../../../types/Bet"
 import OddsBetter from "./OddsBetter"
-import OddsBetterView from "./OddsBetterView"
+import OddsViewer from "./OddsViewer"
 
 type OddsAsBetterProps = {
     odds: OddsArray,
@@ -23,7 +23,7 @@ export default function OddsAsBetter(props: OddsAsBetterProps) {
     });
 
     if (bet) {
-        return <OddsBetterView odds={props.odds} betAmount={bet.amount} betSelection={bet.selection} />
+        return <OddsViewer odds={props.odds} />
     }
     else if (bet === null) {
         return <OddsBetter odds={props.odds} mid={props.mid} uid={props.uid} />
