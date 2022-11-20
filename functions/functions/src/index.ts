@@ -43,6 +43,10 @@ exports.checkScore = functionBuilder
 	}).onDispatch(async (data) => await checkScoreHandler(data.mid, db, footballDataKey.value()));
 
 exports.getMatches = functionBuilder
-	.runWith({ secrets: [footballDataKey] })
+	.runWith({
+		secrets: [footballDataKey],
+		minInstances: 1,
+		memory: "128MB",
+	})
 	.https
 	.onCall(async _ => await getMatchesHandler(db, footballDataKey.value()));
