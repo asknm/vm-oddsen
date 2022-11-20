@@ -5,3 +5,7 @@ export interface BaseMatch<DateType> {
     homeTeam: Team,
     awayTeam: Team,
 }
+
+export interface BaseMatchWithId<IdType, DateType> extends BaseMatch<DateType> {
+    id: IdType
+}

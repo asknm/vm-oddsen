@@ -1,26 +1,40 @@
-import { getFunctions, httpsCallable } from "firebase/functions";
-import { useEffect, useState } from "react";
-import { FirebaseMatchDictionary } from "../types/matchDictionary";
+import { getAuth } from '@firebase/auth';
+import AppBar from '@mui/material/AppBar/AppBar';
+import Button from '@mui/material/Button/Button';
+import Toolbar from '@mui/material/Toolbar/Toolbar';
+import { styled } from '@mui/system';
+import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import Dashboard from './Dashboard';
+import MatchPage from './Pages/MatchPage';
 
 export default function Home() {
-    const [matchDict, setMatchDict] = useState({} as FirebaseMatchDictionary)
 
-    useEffect(() => {
-
-        async function getMatches() {
-            const getMatches = httpsCallable<null, FirebaseMatchDictionary>(getFunctions(undefined, "europe-central2"), 'getMatches');
-            const res = await getMatches.call(null);
-            setMatchDict(res.data);
-        }
-
-        if (!Object.keys(matchDict).length) {
-            getMatches()
-        }
+    const StyledLink = styled(Link)({
+        flexGrow: 1,
+        color: "white",
     })
 
-    return <div>
-        {
-            Object.keys(matchDict).map(value => <p>{value}</p>)
-        }
-    </div>
+    return <BrowserRouter>
+        <AppBar position="static">
+            <Toolbar>
+                <StyledLink to="/">
+                    Hjem
+                </StyledLink>
+                <StyledLink to="/top">
+                    Topplisten
+                </StyledLink>
+                <Button color="secondary" onClick={() => getAuth().signOut()} >
+                    Logg ut
+                </Button>
+            </Toolbar>
+        </AppBar>
+
+        <Routes>
+            <Route path='/m/:mid' element={<MatchPage />} />
+            <Route path="/top">
+                {/* TODO <TopList /> */}
+            </Route>
+            <Route path="/" element={<Dashboard />} />
+        </Routes>
+    </BrowserRouter>
 }

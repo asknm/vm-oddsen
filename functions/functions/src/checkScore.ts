@@ -1,4 +1,4 @@
-import { IApiMatch } from "../../../common/football-data/match";
+import { ApiMatch } from "Common";
 import { DocumentData, DocumentReference, Firestore, UpdateData } from "firebase-admin/firestore";
 import axios from 'axios';
 
@@ -37,7 +37,7 @@ export async function checkScoreHandler(mid: string, db: Firestore, apiKey: stri
         // TODO: Set next bookmakker
     }
 
-    async function getMatchFromApi(mid: string): Promise<IApiMatch> {
+    async function getMatchFromApi(mid: string): Promise<ApiMatch> {
         const response = await axios.get(`https://api.football-data.org/v4/matches/${mid}`, {
             headers: {
                 "X-Auth-Token": apiKey,

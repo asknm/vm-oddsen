@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "lib": [
       "dom",
       "dom.iterable",
@@ -21,6 +21,11 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
-  ]
+    "src",
+    "node_modules/common"
+  ],
+  "paths": {
+    "common": ["node_modules/common"],
+    "common/*": ["node_modules/common/*"]
+  }
 }

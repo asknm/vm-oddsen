@@ -1,7 +1,7 @@
 import { newUserHandler } from "./newUser";
 import { newMatchHandler } from "./newMatch";
 import { checkScoreHandler } from "./checkScore";
-import { getMatchesHandler } from "./getMatchInfo";
+import { getMatchesHandler } from "./getMatches";
 
 import { firestore, credential } from "firebase-admin";
 import { initializeApp } from "firebase-admin/app";
