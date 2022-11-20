@@ -6,32 +6,29 @@ import NumericInput from 'react-numeric-input';
 import { OddsArray, OddsOptions } from 'common';
 import { useState } from 'react';
 import { doc, getFirestore, serverTimestamp, setDoc } from '@firebase/firestore';
-import { getAuth } from '@firebase/auth';
 const ReactGridLayout = WidthProvider(RGL);
 
 type OddsBetterProps = {
     mid: string,
     odds: OddsArray,
+    uid: string,
 }
 
 export default function OddsBetter(props: OddsBetterProps) {
-    const [selected , setSelected] = useState<OddsOptions | undefined>(undefined)
-    const [amount , setAmount] = useState(25)
+    const [selected, setSelected] = useState<OddsOptions>(OddsOptions.H)
+    const [amount, setAmount] = useState(25)
 
     async function submit() {
-        const uid = getAuth().currentUser?.uid;
-        if (selected && uid) {
-            const ref = doc(getFirestore(), "matches", props.mid, "bets", uid)
-            await setDoc(ref, {
-                selection: selected,
-                amount: amount,
-                timestamp: serverTimestamp()
-            })
-        }
+        const ref = doc(getFirestore(), "matches", props.mid, "bets", props.uid)
+        await setDoc(ref, {
+            selection: selected,
+            amount: amount,
+            timestamp: serverTimestamp()
+        })
     }
 
     const theme = responsiveFontSizes(createTheme())
-    
+
     const layout = [
         { i: 'h', x: 0, y: 0, w: 1, h: 1, static: true },
         { i: 'u', x: 1, y: 0, w: 1, h: 1, static: true },
@@ -70,7 +67,7 @@ export default function OddsBetter(props: OddsBetterProps) {
                 <NumericInput min={1} max={25} value={amount} step={1} onChange={v => v && setAmount(v)} />
             </div>
             <div key="submit">
-                <button onClick={e => submit()}>
+                <button onClick={submit}>
                     Bekreft
                 </button>
             </div>

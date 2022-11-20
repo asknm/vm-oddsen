@@ -8,16 +8,9 @@ const ReactGridLayout = WidthProvider(RGL);
 
 type OddsViewerProps = {
     odds: number[],
-    betAmount: number | undefined,
-    betSelection: OddsOptions | undefined,
 }
 
 export default function OddsViewer(props: OddsViewerProps) {
-    const selectionSymbols = ["H", "U", "B"];
-    let bet = <p></p>
-    if (props.betSelection) {
-        bet = <p> Du satt {props.betAmount}kr på {selectionSymbols[props.betSelection]} </p>
-    }
 
     const theme = responsiveFontSizes(createTheme())
 
@@ -28,7 +21,6 @@ export default function OddsViewer(props: OddsViewerProps) {
         { i: 'o0', x: 0, y: 1, w: 1, h: 1, static: true },
         { i: 'o1', x: 1, y: 1, w: 1, h: 1, static: true },
         { i: 'o2', x: 2, y: 1, w: 1, h: 1, static: true },
-        { i: 'bet', x: 0, y: 2, w: 3, h: 1, static: true },
     ];
 
     return <ThemeProvider theme={theme}>
@@ -42,7 +34,6 @@ export default function OddsViewer(props: OddsViewerProps) {
             <Typography variant="body1" key="o1" component={'span'}> {props.odds[OddsOptions.U]} </Typography>
             <Typography variant="body1" key="o2" component={'span'}> {props.odds[OddsOptions.B]} </Typography>
 
-            <Typography variant="body1" key="bet" component={'span'}> {bet} </Typography>
         </ReactGridLayout>
     </ThemeProvider>
 

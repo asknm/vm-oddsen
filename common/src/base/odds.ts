@@ -4,8 +4,8 @@ export interface Odds {
     B: number,
 };
 
-export interface OddsWithBookmaker extends Odds {
-    bookmaker: string,
+export interface OddsWithBookmakerRef<RefType> extends Odds {
+    bookmaker: RefType,
 };
 
 export type OddsArray = [

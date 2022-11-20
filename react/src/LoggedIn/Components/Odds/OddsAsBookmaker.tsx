@@ -10,7 +10,7 @@ type OddsAsBookmakerProps = {
 export default function OddsAsBookmaker(props: OddsAsBookmakerProps) {
 
     if (props.odds.H) {
-        return <OddsViewer odds={ToOddsArray(props.odds)} betAmount={undefined} betSelection={undefined} />
+        return <OddsViewer odds={ToOddsArray(props.odds)} />
     }
     else {
         return <OddsSetter mid={props.mid} />

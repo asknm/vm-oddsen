@@ -2,7 +2,7 @@ import { doc, DocumentReference, getFirestore, onSnapshot } from "@firebase/fire
 import { BaseBet, OddsArray } from "common"
 import { useState } from "react"
 import OddsBetter from "./OddsBetter"
-import OddsViewer from "./OddsViewer"
+import OddsBetterView from "./OddsBetterView"
 
 type OddsAsBetterProps = {
     odds: OddsArray,
@@ -22,10 +22,10 @@ export default function OddsAsBetter(props: OddsAsBetterProps) {
     });
 
     if (bet) {
-        return <OddsViewer odds={props.odds} betAmount={undefined} betSelection={undefined} />
+        return <OddsBetterView odds={props.odds} betAmount={bet.amount} betSelection={bet.selection} />
     }
     else if (bet === null) {
-        return <OddsBetter odds={props.odds} mid={props.mid} />
+        return <OddsBetter odds={props.odds} mid={props.mid} uid={props.uid} />
     }
 
     return <div></div>
