@@ -32,7 +32,10 @@ exports.newMatch =
 exports.queueCheckScore =
 	functionBuilder
 		.https
-		.onRequest(async (req, res) => await queueCheckScoreHandler(req.body.mid));
+		.onRequest(async (req, res) => {
+			await queueCheckScoreHandler(req.body.mid);
+			res.status(200).end();
+		});
 
 exports.checkScore = functionBuilder
 	.runWith({ secrets: [footballDataKey] })
