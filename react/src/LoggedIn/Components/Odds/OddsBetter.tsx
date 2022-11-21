@@ -6,7 +6,7 @@ import { createTheme, responsiveFontSizes, ThemeProvider, Typography } from '@mu
 import NumericInput from 'react-numeric-input';
 import { OddsArray, OddsOptions } from 'common';
 import { useState } from 'react';
-import { doc, getFirestore, serverTimestamp, setDoc } from '@firebase/firestore';
+import { doc, getFirestore, increment, serverTimestamp, setDoc, updateDoc } from '@firebase/firestore';
 import { InsertBet } from '../../../types/Bet';
 const ReactGridLayout = WidthProvider(RGL);
 
@@ -21,6 +21,13 @@ export default function OddsBetter(props: OddsBetterProps) {
     const [amount, setAmount] = useState(25)
 
     async function submit() {
+        await Promise.all([
+            placeBet(),
+            incrementTotalBettedAmount(),
+        ]);
+    }
+
+    async function placeBet() {
         const ref = doc(getFirestore(), "matches", props.mid, "bets", props.uid)
         const bet: InsertBet = {
             selection: selected,
@@ -28,6 +35,13 @@ export default function OddsBetter(props: OddsBetterProps) {
             timestamp: serverTimestamp()
         };
         await setDoc(ref, bet);
+    }
+
+    async function incrementTotalBettedAmount() {
+        const ref = doc(getFirestore(), "users", props.uid)
+        await updateDoc(ref, {
+            totalBettedAmount: increment(amount),
+        });
     }
 
     const theme = responsiveFontSizes(createTheme())
