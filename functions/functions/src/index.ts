@@ -8,6 +8,7 @@ import { initializeApp } from "firebase-admin/app";
 import { region, FunctionBuilder } from "firebase-functions";
 import { defineSecret } from "firebase-functions/params";
 import { myRegion } from "./constants";
+import { queueCheckScoreHandler } from "./queueCheckScore";
 
 initializeApp({
 	credential: credential.applicationDefault(),
@@ -27,6 +28,11 @@ exports.newMatch =
 		.firestore
 		.document('matches/{mid}')
 		.onCreate(async (snap, _) => await newMatchHandler(snap));
+
+exports.queueCheckScore =
+	functionBuilder
+		.https
+		.onRequest(async (req, res) => await queueCheckScoreHandler(req.body.mid));
 
 exports.checkScore = functionBuilder
 	.runWith({ secrets: [footballDataKey] })

@@ -1,13 +1,10 @@
 import { QueryDocumentSnapshot } from "firebase-admin/firestore";
-import { getFunctions } from "firebase-admin/functions";
-import { FirebaseMatch, myRegion } from "./constants";
+import { FirebaseMatch, getQueue } from "./constants";
 
 export async function newMatchHandler(snap: QueryDocumentSnapshot) {
-	const queue = getFunctions().taskQueue(`locations/${myRegion}/functions/checkScore`);
-
 	const match = snap.data() as FirebaseMatch;
 
-	await queue.enqueue(
+	await getQueue().enqueue(
 		{
 			mid: snap.id,
 		},
