@@ -7,6 +7,7 @@ import { styled } from '@mui/system';
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import Dashboard from './Dashboard';
 import MatchPage from './Pages/MatchPage';
+import TopList from './Pages/TopList';
 
 export default function Home() {
 
@@ -32,9 +33,7 @@ export default function Home() {
 
         <Routes>
             <Route path='/m/:mid' element={<MatchPage />} />
-            <Route path="/top">
-                {/* TODO <TopList /> */}
-            </Route>
+            <Route path="/top" element={<TopList />} />
             <Route path="/" element={<Dashboard />} />
         </Routes>
     </BrowserRouter>
