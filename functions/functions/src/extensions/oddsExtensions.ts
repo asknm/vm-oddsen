@@ -1,5 +1,6 @@
-import { OddsWithBookmakerRef, Standing, Odds } from "common";
+import { Standing, Odds } from "common";
 import { DocumentReference, Firestore } from "firebase-admin/firestore";
+import { OddsWithBookmakerRef } from "../types/Odds";
 import { matchDoc } from "./matchExtensions";
 
 enum OddsOptions {
@@ -8,8 +9,8 @@ enum OddsOptions {
     B,
 }
 
-export function oddsDoc(db: Firestore, mid: string): DocumentReference<OddsWithBookmakerRef<DocumentReference>> {
-    return matchDoc(db, mid).collection("odds").doc("odds") as DocumentReference<OddsWithBookmakerRef<DocumentReference>>;
+export function oddsDoc(db: Firestore, mid: string): DocumentReference<OddsWithBookmakerRef> {
+    return matchDoc(db, mid).collection("odds").doc("odds") as DocumentReference<OddsWithBookmakerRef>;
 }
 
 export function correctOddsOption(finalStanding: Standing): OddsOptions {

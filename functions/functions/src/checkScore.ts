@@ -1,15 +1,17 @@
-import { ApiMatch, OddsWithBookmakerRef } from "common";
+import { ApiMatch } from "common";
 import { CollectionReference, DocumentData, DocumentReference, FieldValue, Firestore, Timestamp, UpdateData } from "firebase-admin/firestore";
 import axios from 'axios';
 import { oddsDoc, correctOddsOption, oddsValue } from "./extensions/oddsExtensions";
 import { betCollection } from "./extensions/betExtensions";
 import { userCollection, userDoc } from "./extensions/userExtensions";
 import { FirebaseMatch } from "./types/Match";
+import { OddsWithBookmakerRef } from "./types/Odds";
 
 export async function checkScoreHandler(mid: string, db: Firestore, apiKey: string) {
     const [apiMatch, dbScore] = await Promise.all([
         getMatchFromApi(mid),
         getScoreFromDb(mid),
+        setNextBookmaker(),
     ]);
 
     if (!dbScore) {
@@ -40,7 +42,6 @@ export async function checkScoreHandler(mid: string, db: Firestore, apiKey: stri
         Promise.all([
             finishMatch(),
             settleDebts(),
-            setNextBookmaker(),
         ]);
     }
 
@@ -62,7 +63,7 @@ export async function checkScoreHandler(mid: string, db: Firestore, apiKey: stri
             settleLosers(odds),
         ]);
 
-        async function settleWinners(odds: OddsWithBookmakerRef<DocumentReference>) {
+        async function settleWinners(odds: OddsWithBookmakerRef) {
             const oddsV = oddsValue(odds, correctOption);
             const winners = await betCollection(db, mid).where("selection", "==", correctOption).get();
             await Promise.all(winners.docs.map(async doc => {
@@ -72,7 +73,7 @@ export async function checkScoreHandler(mid: string, db: Firestore, apiKey: stri
             }));
         }
 
-        async function settleLosers(odds: OddsWithBookmakerRef<DocumentReference>) {
+        async function settleLosers(odds: OddsWithBookmakerRef) {
             const losers = await betCollection(db, mid).where("selection", "!=", correctOption).get();
             await Promise.all(losers.docs.map(async doc => {
                 const bet = doc.data();
@@ -114,16 +115,20 @@ export async function checkScoreHandler(mid: string, db: Firestore, apiKey: stri
         });
         const firstMatch = firstMatchSnapshot.data();
 
-        for (let i = 1; i < matchDocs.length; i++) {
+        let i = 1;
+        for (i; i < matchDocs.length; i++) {
             const matchSnapshot = matchDocs[i];
             const match = matchSnapshot.data();
             if (firstMatch.utcDate.toDate().getDate() !== match.utcDate.toDate().getDate()) {
                 return;
             }
-            await matchSnapshot.ref.collection("odds").doc("odds").update({
+            await matchSnapshot.ref.collection("odds").doc("odds").set({
                 bookmaker: userDoc(db, nextBookmaker),
             });
         }
+        await userDoc(db, nextBookmaker).update({
+            matchesAsOdds: FieldValue.increment(i),
+        });
     }
 
     async function findNextBookmaker(): Promise<string> {
