@@ -55,7 +55,7 @@ exports.getMatches = functionBuilder
 	.runWith({
 		secrets: [footballDataKey],
 		minInstances: 1,
-		memory: "128MB",
+		memory: "512MB",
 	})
 	.https
 	.onCall(async _ => await getMatchesHandler(db, footballDataKey.value()));
