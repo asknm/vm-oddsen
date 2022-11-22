@@ -4,8 +4,6 @@ import Typography from "@mui/material/Typography/Typography";
 import createTheme from "@mui/material/styles/createTheme";
 import responsiveFontSizes from "@mui/material/styles/responsiveFontSizes";
 
-import { useNavigate } from 'react-router';
-
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 import RGL, { WidthProvider } from "react-grid-layout";
@@ -32,16 +30,7 @@ export default function Match(props: MatchProps) {
 
     const theme = responsiveFontSizes(createTheme())
 
-    const navigate = useNavigate();
-    function navigateToMatchPage() {
-        navigate(`/m/${props.match.id}`, {
-            state: {
-                match: props.match,
-            }
-        });
-    }
-
-    return <div style={{ border: "1px solid black" }} onClick={navigateToMatchPage} >
+    return <div style={{ border: "1px solid black" }} >
         <ThemeProvider theme={theme}>
             <ReactGridLayout layout={layout} cols={5} rowHeight={32}>
                 <Typography variant="h6" key="date"> {new Date(props.match.utcDate).toLocaleTimeString()} </Typography>

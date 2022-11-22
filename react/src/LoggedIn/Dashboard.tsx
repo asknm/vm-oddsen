@@ -4,9 +4,11 @@ import responsiveFontSizes from "@mui/material/styles/responsiveFontSizes";
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
 import Typography from "@mui/material/Typography/Typography";
 
+import { useNavigate } from 'react-router';
+
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { useEffect, useState } from "react";
-import { DtoMatchDictionary } from "common";
+import { DtoMatch, DtoMatchDictionary } from "common";
 import Match from "./Components/Match";
 
 export default function Dashboard() {
@@ -26,6 +28,15 @@ export default function Dashboard() {
     let theme = createTheme();
     theme = responsiveFontSizes(theme);
 
+    const navigate = useNavigate();
+    function navigateToMatchPage(match: DtoMatch) {
+        navigate(`/m/${match.id}`, {
+            state: {
+                match: match,
+            }
+        });
+    }
+
     return <div>
         {
             Object.entries(matchDict).map(([key, matches]) =>
@@ -33,7 +44,7 @@ export default function Dashboard() {
                     <div style={{ border: "1px solid black" }}>
                         <Typography variant="h5"> {key} </Typography>
                         {matches.map((value, index) => {
-                            return <div className={"row"} key={index}>
+                            return <div className={"row"} key={index} onClick={() => navigateToMatchPage(value)}>
                                 <Match match={value} />
                             </div>
                         })}
