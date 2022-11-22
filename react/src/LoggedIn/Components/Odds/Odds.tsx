@@ -1,6 +1,6 @@
 import React from 'react';
 import { doc, DocumentReference, getFirestore, onSnapshot } from "@firebase/firestore"
-import { DtoMatch, ToOddsArray, HasStarted } from "common"
+import { DtoMatch, ToOddsArray } from "common"
 import { useEffect, useState } from "react"
 import OddsAsBookmaker from "./OddsAsBookmaker"
 import OddsAsBetter from "./OddsAsBetter"
@@ -26,8 +26,8 @@ export default function Odds(props: OddsProps) {
         if (props.uid === odds.bookmaker.id) {
             return <OddsAsBookmaker odds={odds} mid={props.match.id} />
         }
-        else if (odds.H && !HasStarted(props.match)) {
-            return <OddsAsBetter odds={ToOddsArray(odds)} mid={props.match.id} uid={props.uid} />
+        else if (odds.H) {
+            return <OddsAsBetter odds={ToOddsArray(odds)} match={props.match} uid={props.uid} />
         }
     }
 
