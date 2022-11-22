@@ -8,4 +8,4 @@ export { type OddsWithBookmaker, type Odds, OddsFromArray, type OddsArray, OddsO
 export { type IBaseBet, type IBetWithBetter } from "./base/bet"
 export { type Team } from "./base/team"
 export { type IUser, type UserWithBalance, type UserWithId } from "./base/user"
-export { type Standing } from "./base/standing"
+export { type Standing, type StandingWithFinished } from "./base/standing"

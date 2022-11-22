@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
 import Typography from "@mui/material/Typography/Typography";
 import createTheme from "@mui/material/styles/createTheme";
@@ -8,13 +8,24 @@ import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 import RGL, { WidthProvider } from "react-grid-layout";
 
-import { DtoMatch } from "common";
+import { DtoMatch, StandingWithFinished } from "common";
+import { getStandingRef } from '../../types/Standing';
+import { onSnapshot } from '@firebase/firestore';
 
 type MatchProps = {
     match: DtoMatch
 }
 
 export default function Match(props: MatchProps) {
+    const [standing, setStanding] = useState<StandingWithFinished | undefined>();
+
+    useEffect(() => {
+        onSnapshot(getStandingRef(props.match.id), async doc => {
+            if (doc.exists()) {
+                setStanding(doc.data());
+            }
+        });
+    }, []);
 
     const ReactGridLayout = WidthProvider(RGL);
 
@@ -38,7 +49,7 @@ export default function Match(props: MatchProps) {
 
                 <div key="f0"> <img alt="" src={props.match.homeTeam.crest} height={50} /> </div>
                 <Typography variant="body1" key="t0" align="center"> {props.match.homeTeam.name} </Typography>
-                {/* TODO: <Typography variant="h6" key="-" align="center"> {getStanding(props.match.score)?.homeTeam} - {getStanding(this.props.match.score)?.awayTeam} </Typography> */}
+                {<Typography variant="h6" key="-" align="center"> {standing?.home} - {standing?.away} </Typography> }
                 <Typography variant="body1" key="t1" align="center"> {props.match.awayTeam.name} </Typography>
                 <div key="f1"> <img alt="" src={props.match.awayTeam.crest} height={50} /> </div>
             </ReactGridLayout>
