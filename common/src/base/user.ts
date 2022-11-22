@@ -9,3 +9,7 @@ export interface IUser<TTimestamp> extends BaseUser {
 export interface UserWithBalance extends BaseUser {
     balance: number,
 }
+
+export interface UserWithId extends BaseUser {
+    id: string,
+}

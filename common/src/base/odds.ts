@@ -4,9 +4,9 @@ export interface Odds {
     B: number,
 };
 
-export interface OddsWithBookmakerRef<RefType> extends Odds {
-    bookmaker: RefType,
-};
+export interface OddsWithBookmaker<T> extends Odds {
+    bookmaker: T;
+}
 
 export type OddsArray = [
     H: number,
