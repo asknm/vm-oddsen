@@ -9,6 +9,7 @@ import { region, FunctionBuilder } from "firebase-functions";
 import { defineSecret } from "firebase-functions/params";
 import { myRegion } from "./constants";
 import { queueCheckScoreHandler } from "./queueCheckScore";
+import { TaskQueueOptions } from "firebase-functions/v1/tasks";
 
 initializeApp({
 	credential: credential.applicationDefault(),
@@ -38,18 +39,30 @@ exports.queueCheckScore =
 		});
 
 exports.checkScore = functionBuilder
-	.runWith({ secrets: [footballDataKey] })
-	.tasks.taskQueue({
+	.runWith({
+		secrets: [footballDataKey],
+		memory: "128MB",
+	})
+	.tasks.taskQueue(getTaskQueueOptions())
+	.onDispatch(async (data) => await checkScoreHandler(data.mid, db, footballDataKey.value()));
+
+function getTaskQueueOptions(): TaskQueueOptions {
+	const maxApiCallsPerMinute = 10;
+	const maxMinutesBeforeFullTime = 200;
+	const maxConcurrentMatches = 2;
+	return {
 		retryConfig: {
-			maxAttempts: 2000,
-			maxRetrySeconds: 200 * 60,
-			maxDoublings: 0,
+			maxAttempts: maxApiCallsPerMinute * maxMinutesBeforeFullTime,
+			maxRetrySeconds: maxMinutesBeforeFullTime * 60,
+			minBackoffSeconds: 60 / maxApiCallsPerMinute,
+			maxBackoffSeconds: 60 / maxApiCallsPerMinute,
 		},
 		rateLimits: {
-			maxConcurrentDispatches: 4,
-			maxDispatchesPerSecond: 1 / 6,
+			maxConcurrentDispatches: maxConcurrentMatches,
+			maxDispatchesPerSecond: maxApiCallsPerMinute / 60,
 		},
-	}).onDispatch(async (data) => await checkScoreHandler(data.mid, db, footballDataKey.value()));
+	};
+}
 
 exports.getMatches = functionBuilder
 	.runWith({
