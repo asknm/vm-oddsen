@@ -64,10 +64,12 @@ function getTaskQueueOptions(): TaskQueueOptions {
 	};
 }
 
+const envProjectId = JSON.parse(process.env.FIREBASE_CONFIG!).projectId;
+
 exports.getMatches = functionBuilder
 	.runWith({
 		secrets: [footballDataKey],
-		minInstances: 1,
+		minInstances: envProjectId === "vm-oddsen" ? 1 : 0,
 		memory: "512MB",
 	})
 	.https

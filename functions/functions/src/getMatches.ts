@@ -25,12 +25,13 @@ export async function getMatchesHandler(db: Firestore, apiKey: string) {
     }
 
     return matches.reduce<DtoMatchDictionary>((previous, current) => {
-        const dateString = new Date(current.utcDate).toLocaleDateString('no-NO');
-        if (previous[dateString]) {
-            previous[dateString].push(current);
+        const date = new Date(current.utcDate);
+        const dateValue = Date.UTC(date.getUTCFullYear(), date.getMonth(), date.getDate());
+        if (previous[dateValue]) {
+            previous[dateValue].push(current);
         }
         else {
-            previous[dateString] = [current];
+            previous[dateValue] = [current];
         }
         return previous;
     }, {});
