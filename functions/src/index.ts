@@ -66,11 +66,11 @@ function getTaskQueueOptions(): TaskQueueOptions {
 
 const envProjectId = JSON.parse(process.env.FIREBASE_CONFIG!).projectId;
 
-exports.getMatches = functionBuilder
+exports.getMatchesHttp = functionBuilder
 	.runWith({
 		secrets: [footballDataKey],
 		minInstances: envProjectId === "vm-oddsen" ? 1 : 0,
 		memory: "512MB",
 	})
 	.https
-	.onCall(async _ => await getMatchesHandler(db, footballDataKey.value()));
+	.onRequest(async (req, res) => await getMatchesHandler(db, footballDataKey.value(), res));

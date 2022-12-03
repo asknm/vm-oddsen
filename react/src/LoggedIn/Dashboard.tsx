@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { getFunctions, httpsCallable } from "firebase/functions";
 import { useEffect, useState } from "react";
 import { DtoMatchDictionary } from "common";
 import MatchDay from './Components/MatchDay';
@@ -11,9 +10,9 @@ export default function Dashboard() {
     useEffect(() => {
 
         async function getMatches() {
-            const getMatches = httpsCallable<null, DtoMatchDictionary>(getFunctions(undefined, "europe-central2"), 'getMatches');
-            const res = await getMatches.call(null);
-            const data = res.data;
+            const projectId = require('../firebase-config.json').result.sdkConfig.projectId;
+            const response = await fetch(`https://europe-central2-${projectId}.cloudfunctions.net/getMatchesHttp`);
+            const data = await response.json();
             setMatchDict(data);
         }
 
