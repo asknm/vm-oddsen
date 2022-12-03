@@ -38,6 +38,7 @@ export async function getMatchesHandler(db: Firestore, apiKey: string, res: Resp
             return previous;
         }, {});
 
+        res.set('Cache-Control', 'public, max-age=60');
         res.status(200).send(matchDict);
     } catch (error) {
         res.status(500).send(error);

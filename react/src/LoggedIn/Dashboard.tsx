@@ -10,8 +10,7 @@ export default function Dashboard() {
     useEffect(() => {
 
         async function getMatches() {
-            const projectId = require('../firebase-config.json').result.sdkConfig.projectId;
-            const response = await fetch(`https://europe-central2-${projectId}.cloudfunctions.net/getMatchesHttp`);
+            const response = await fetch('/getMatches');
             const data = await response.json();
             setMatchDict(data);
         }
