@@ -81,7 +81,7 @@ exports.fetchMatchesFromApi = functionBuilder
 
 const envProjectId = JSON.parse(process.env.FIREBASE_CONFIG!).projectId;
 
-exports.getMatchesHttp = functionBuilder
+exports.getMatches = functionBuilder
 	.runWith({
 		secrets: [footballDataKey],
 		minInstances: envProjectId === "vm-oddsen" ? 1 : 0,

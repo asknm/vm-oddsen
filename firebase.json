@@ -29,7 +29,7 @@
     "rewrites": [
       {
         "source": "/getMatches",
-        "function": "getMatchesHttp",
+        "function": "getMatches",
         "region": "europe-central2"
       },
       {
