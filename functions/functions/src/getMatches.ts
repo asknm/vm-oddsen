@@ -1,10 +1,10 @@
-import { DtoMatchDictionary, DtoMatch, ApiMatch } from "common";
+import { DtoMatchDictionary, DtoMatch } from "common";
 import { CollectionReference, Firestore } from "firebase-admin/firestore";
-import axios from 'axios';
 import { logger } from "firebase-functions/v1";
 import { FirebaseMatch } from "./constants";
 import { fromApiMatch as dtoMatchFromApi, fromSnapshot } from "./extensions/dtoMatchExtensions";
 import { fromApiMatch as firebaseMatchFromApi } from "./extensions/firebaseMatchExtensions";
+import { getMatchesFromApi } from "./helpers/apiHelpers";
 
 
 export async function getMatchesHandler(db: Firestore, apiKey: string) {
@@ -14,7 +14,7 @@ export async function getMatchesHandler(db: Firestore, apiKey: string) {
 
     if (!matches.length) {
         logger.log('Fetching matches from api');
-        const matchesFromApi = await getMatchesFromApi();
+        const matchesFromApi = await getMatchesFromApi(apiKey);
         const batch = db.batch();
         for (const match of matchesFromApi) {
             const ref = matchesCollection.doc(match.id.toString());
@@ -39,15 +39,5 @@ export async function getMatchesHandler(db: Firestore, apiKey: string) {
     async function getMatchesFromDb(): Promise<DtoMatch[]> {
         const snapshot = await matchesCollection.orderBy("utcDate").get();
         return snapshot.docs.map(doc => fromSnapshot(doc));
-    }
-
-    async function getMatchesFromApi(): Promise<ApiMatch[]> {
-        const response = await axios.get('https://api.football-data.org/v4/competitions/2000/matches', {
-            headers: {
-                "X-Auth-Token": apiKey,
-            },
-        });
-        const data = response.data;
-        return data.matches;
     }
 }
