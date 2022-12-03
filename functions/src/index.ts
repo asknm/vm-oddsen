@@ -79,13 +79,10 @@ exports.fetchMatchesFromApi = functionBuilder
 	})
 	.onDispatch(async _ => await fetchMatchesFromApiHandler(db, footballDataKey.value()));
 
-const envProjectId = JSON.parse(process.env.FIREBASE_CONFIG!).projectId;
-
 exports.getMatches = functionBuilder
 	.runWith({
 		secrets: [footballDataKey],
-		minInstances: envProjectId === "vm-oddsen" ? 1 : 0,
-		memory: "512MB",
+		memory: "4GB",
 	})
 	.https
 	.onRequest(async (req, res) => await getMatchesHandler(db, footballDataKey.value(), res));
