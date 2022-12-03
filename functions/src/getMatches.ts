@@ -1,7 +1,7 @@
 import { DtoMatchDictionary, DtoMatch } from "common";
 import { CollectionReference, Firestore } from "firebase-admin/firestore";
 import { logger, Response } from "firebase-functions/v1";
-import { FirebaseMatch } from "./constants";
+import { FirebaseMatch, getFetchMatchesQueue } from "./constants";
 import { fromApiMatch as dtoMatchFromApi, fromSnapshot } from "./extensions/dtoMatchExtensions";
 import { fromApiMatch as firebaseMatchFromApi } from "./extensions/firebaseMatchExtensions";
 import { getMatchesFromApi } from "./helpers/apiHelpers";
@@ -37,6 +37,14 @@ export async function getMatchesHandler(db: Firestore, apiKey: string, res: Resp
             }
             return previous;
         }, {});
+
+        await getFetchMatchesQueue().enqueue(
+            {
+                id: new Date().getHours(),
+            },
+            {
+            }
+        );
 
         res.set('Cache-Control', 'public, max-age=60');
         res.status(200).send(matchDict);

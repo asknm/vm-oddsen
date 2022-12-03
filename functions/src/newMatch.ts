@@ -1,10 +1,10 @@
 import { QueryDocumentSnapshot } from "firebase-admin/firestore";
-import { FirebaseMatch, getQueue } from "./constants";
+import { FirebaseMatch, getCheckScoreQueue } from "./constants";
 
 export async function newMatchHandler(snap: QueryDocumentSnapshot) {
 	const match = snap.data() as FirebaseMatch;
 
-	await getQueue().enqueue(
+	await getCheckScoreQueue().enqueue(
 		{
 			mid: snap.id,
 		},

@@ -4,10 +4,7 @@ import { betCollection } from "./extensions/betExtensions";
 import { userCollection, userDoc } from "./extensions/userExtensions";
 import { FirebaseMatch } from "./types/Match";
 import { OddsWithBookmakerRef } from "./types/Odds";
-import { getMatchesFromApiFromDate, getMatchFromApi } from "./helpers/apiHelpers";
-import { matchDoc } from "./extensions/matchExtensions";
-import { ApiMatch } from "common";
-import { fromApiTeam } from "./extensions/teamExtensions";
+import { getMatchFromApi } from "./helpers/apiHelpers";
 
 export async function checkScoreHandler(mid: string, db: Firestore, apiKey: string) {
     const [apiMatch, dbScore] = await Promise.all([
@@ -44,29 +41,7 @@ export async function checkScoreHandler(mid: string, db: Firestore, apiKey: stri
         Promise.all([
             finishMatch(),
             settleDebts(),
-            fillMissingTeamsForUpcomingMatches(),
         ]);
-    }
-
-    async function fillMissingTeamsForUpcomingMatches() {
-        const matchesFromApi = await getMatchesFromApiFromDate(apiKey, new Date());
-        await Promise.all(matchesFromApi.map(async apiMatch => await setMatchTeamsIfMissing(apiMatch)));
-
-        async function setMatchTeamsIfMissing(apiMatch: ApiMatch) {
-            const matchRef = matchDoc(db, apiMatch.id.toString());
-            const snapshot = await matchRef.get();
-            const matchData = snapshot.data();
-            if (!matchData) {
-                return;
-            }
-            if ((matchData.homeTeam.name || !apiMatch.homeTeam.name) && ((matchData.awayTeam.name || !apiMatch.awayTeam.name))) {
-                return;
-            }
-            await matchRef.update({
-                homeTeam: fromApiTeam(apiMatch.homeTeam),
-                awayTeam: fromApiTeam(apiMatch.awayTeam),
-            });
-        }
     }
 
 

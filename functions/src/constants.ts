@@ -8,6 +8,10 @@ export const myRegion = "europe-central2";
 
 export type InsertUser = IUser<FieldValue>;
 
-export function getQueue(): TaskQueue {
+export function getCheckScoreQueue(): TaskQueue {
     return getFunctions().taskQueue(`locations/${myRegion}/functions/checkScore`);
+}
+
+export function getFetchMatchesQueue(): TaskQueue {
+    return getFunctions().taskQueue(`locations/${myRegion}/functions/fetchMatchesFromApi`);
 }

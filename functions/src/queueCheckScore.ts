@@ -1,7 +1,7 @@
-import { getQueue } from "./constants";
+import { getCheckScoreQueue } from "./constants";
 
 export async function queueCheckScoreHandler(mid: string) {
-	await getQueue().enqueue(
+	await getCheckScoreQueue().enqueue(
 		{
 			mid: mid,
 		},
