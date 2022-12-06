@@ -11,6 +11,7 @@ import { myRegion } from "./constants";
 import { queueCheckScoreHandler } from "./queueCheckScore";
 import { TaskQueueOptions } from "firebase-functions/v1/tasks";
 import { fetchMatchesFromApiHandler } from "./fetchMatchesFromApi";
+import { recalculateDebtsHandler } from "./recalculateDebts";
 
 initializeApp({
 	credential: credential.applicationDefault(),
@@ -86,3 +87,11 @@ exports.getMatches = functionBuilder
 	})
 	.https
 	.onRequest(async (req, res) => await getMatchesHandler(db, footballDataKey.value(), res));
+
+exports.recalculateDebts = functionBuilder
+	.runWith({
+		secrets: [footballDataKey],
+		memory: "4GB",
+	})
+	.https
+	.onRequest(async (req, res) => await recalculateDebtsHandler(db, footballDataKey.value(), res));

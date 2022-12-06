@@ -1,10 +1,8 @@
 import { CollectionReference, DocumentData, DocumentReference, FieldValue, Firestore, Timestamp, UpdateData } from "firebase-admin/firestore";
-import { oddsDoc, correctOddsOption, oddsValue } from "./extensions/oddsExtensions";
-import { betCollection } from "./extensions/betExtensions";
 import { userCollection, userDoc } from "./extensions/userExtensions";
 import { FirebaseMatch } from "./types/Match";
-import { OddsWithBookmakerRef } from "./types/Odds";
 import { getMatchFromApi } from "./helpers/apiHelpers";
+import { settleDebts } from "./helpers/debtSettling";
 
 export async function checkScoreHandler(mid: string, db: Firestore, apiKey: string) {
     const [apiMatch, dbScore] = await Promise.all([
@@ -40,7 +38,7 @@ export async function checkScoreHandler(mid: string, db: Firestore, apiKey: stri
     else {
         Promise.all([
             finishMatch(),
-            settleDebts(),
+            settleDebts(db, mid, apiMatch),
         ]);
     }
 
@@ -49,51 +47,6 @@ export async function checkScoreHandler(mid: string, db: Firestore, apiKey: stri
         await scoreDoc(mid).update({
             finished: true,
         });
-    }
-
-    async function settleDebts() {
-        const correctOption = correctOddsOption(apiMatch.score.fullTime);
-        const oddsRef = await oddsDoc(db, mid).get();
-        const odds = oddsRef.data();
-        if (!odds) {
-            throw new Error("Missing odds");
-        }
-        await Promise.all([
-            settleWinners(odds),
-            settleLosers(odds),
-        ]);
-
-        async function settleWinners(odds: OddsWithBookmakerRef) {
-            const oddsV = oddsValue(odds, correctOption);
-            const winners = await betCollection(db, mid).where("selection", "==", correctOption).get();
-            await Promise.all(winners.docs.map(async doc => {
-                const bet = doc.data();
-                const winAmount = bet.amount * (oddsV - 1);
-                await transfer(odds.bookmaker, doc.id, winAmount);
-            }));
-        }
-
-        async function settleLosers(odds: OddsWithBookmakerRef) {
-            const losers = await betCollection(db, mid).where("selection", "!=", correctOption).get();
-            await Promise.all(losers.docs.map(async doc => {
-                const bet = doc.data();
-                await transfer(odds.bookmaker, doc.id, -bet.amount);
-            }));
-        }
-
-        async function transfer(from: DocumentReference, to: string, amount: number) {
-            const userRef = userDoc(db, to);
-            await Promise.all([
-                incrementBalance(from, -amount),
-                incrementBalance(userRef, amount),
-            ]);
-        }
-
-        async function incrementBalance(userDoc: DocumentReference, amount: number) {
-            await userDoc.update({
-                "balance": FieldValue.increment(amount),
-            });
-        }
     }
 
     async function setNextBookmaker() {
